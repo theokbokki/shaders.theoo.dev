@@ -1,8 +1,11 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import ShaderCanvas from "@/Shared/ShaderCanvas.vue";
+import vertexShader from "@/Shaders/basic.vert?raw";
+import fragmentShader from "@/Shaders/basic.frag?raw";
 </script>
 
 <template>
-    <Head title="Home" />
-    <h1 class="text-red-500">Welcome</h1>
+    <main class="flex h-screen items-center justify-center">
+        <ShaderCanvas :vertexShader="vertexShader" :fragmentShader="fragmentShader" />
+    </main>
 </template>
