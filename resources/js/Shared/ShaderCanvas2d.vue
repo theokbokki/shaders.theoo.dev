@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import * as THREE from "three";
 
 const props = defineProps({
@@ -48,6 +48,8 @@ function getHeight() {
 const canvasRef = ref(null);
 let renderer, scene, camera, material;
 
+const textureLoader = new THREE.TextureLoader();
+
 function onResize() {
     const width = getWidth();
     const height = getHeight();
@@ -62,8 +64,6 @@ onMounted(() => {
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(getWidth(), getHeight());
     canvasRef.value.appendChild(renderer.domElement);
-
-    const textureLoader = new THREE.TextureLoader();
 
     const mergedUniforms = {
         ...props.uniforms,
@@ -93,6 +93,18 @@ onMounted(() => {
     }
     renderer.setAnimationLoop(animate);
 });
+
+watch(
+    () => props.textures,
+    (newTextures) => {
+        if (material) {
+            for (const key in newTextures) {
+                material.uniforms[key].value = textureLoader.load(newTextures[key]);
+            }
+        }
+    },
+    { deep: true },
+);
 
 onUnmounted(() => {
     window.removeEventListener("resize", onResize);
