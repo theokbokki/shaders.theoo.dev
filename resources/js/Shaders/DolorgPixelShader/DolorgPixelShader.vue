@@ -54,6 +54,7 @@ function initPane() {
 
         if (container) {
             pane = new Pane({
+                title: "Dolorg pixel shader",
                 container: container,
             });
 
@@ -61,15 +62,12 @@ function initPane() {
                 pixelSize: 8.0,
             };
 
-            const folder = pane.addFolder({
-                title: "Dolorg pixel shader",
-            });
-
-            folder
-                .addBinding(PARAMS, "pixelSize", { label: "Pixel size", min: 2, max: 20, step: 2 })
-                .on("change", (e) => {
+            pane.addBinding(PARAMS, "pixelSize", { label: "Pixel size", min: 2, max: 20, step: 2 }).on(
+                "change",
+                (e) => {
                     uniforms.value.u_pixelSize.value = e.value;
-                });
+                },
+            );
         } else {
             console.warn("Container #dolorg-pixel-shader not found.");
         }
@@ -91,7 +89,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-if="imageLoaded" class="relative w-screen py-80 mx-40 flex items-center justify-center">
+    <div v-if="imageLoaded" class="relative w-full py-80 flex items-center justify-center">
         <PaneContainer id="dolorg-pixel-shader" />
         <ShaderCanvas2d
             :vertex-shader="vertexShader"

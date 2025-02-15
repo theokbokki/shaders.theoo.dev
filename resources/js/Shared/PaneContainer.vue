@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 
 const props = defineProps({
     id: String,
@@ -27,38 +27,61 @@ const stopDrag = () => {
     isDragging.value = false;
 };
 
+let resizeObserver = null;
+const updatePosition = () => {
+    const el = container.value;
+    if (el && el.parentElement) {
+        const parent = el.parentElement;
+        const parentWidth = parent.clientWidth;
+        const containerWidth = el.offsetWidth;
+
+        if (containerWidth) {
+            position.value.x = parentWidth - containerWidth;
+        }
+
+        position.value.y = el.offsetTop;
+    }
+};
+
 onMounted(() => {
     nextTick(() => {
-        const el = container.value;
-        if (el && el.parentElement) {
-            const parentWidth = el.parentElement.offsetWidth;
-            const containerWidth = el.offsetWidth;
-            position.value.x = parentWidth - containerWidth;
-            position.value.y = el.offsetTop;
+        updatePosition();
+        if (container.value) {
+            resizeObserver = new ResizeObserver(() => {
+                updatePosition();
+            });
+
+            resizeObserver.observe(container.value);
         }
     });
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", stopDrag);
+    window.addEventListener("resize", updatePosition);
 });
 
 onUnmounted(() => {
-    window.removeEventListener('mousemove', onMouseMove);
-    window.removeEventListener('mouseup', stopDrag);
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", stopDrag);
+    window.removeEventListener("resize", updatePosition);
+
+    if (resizeObserver && container.value) {
+        resizeObserver.unobserve(container.value);
+    }
 });
 </script>
 
 <template>
-  <div
-    :id="props.id"
-    ref="container"
-    class="absolute top-0 w-max select-none"
-    :style="{ left: position.x + 'px', top: position.y + 'px' }"
-  >
     <div
-      ref="header"
-      class="h-16 cursor-grab flex justify-center items-center before:block before:h-4 before:rounded-full before:w-80/100  transition-all before:bg-neutral-200 active:cursor-grabbing hover:before:bg-neutral-300"
-      @mousedown="startDrag"
-    ></div>
-  </div>
+        :id="props.id"
+        ref="container"
+        class="absolute top-0 w-max select-none"
+        :style="{ left: position.x + 'px', top: position.y + 'px' }"
+    >
+        <div
+            ref="header"
+            class="h-16 cursor-grab flex justify-center items-center before:block before:h-4 before:rounded-full before:w-80/100 transition-all before:bg-neutral-200 active:cursor-grabbing hover:before:bg-neutral-300"
+            @mousedown="startDrag"
+        ></div>
+    </div>
 </template>
