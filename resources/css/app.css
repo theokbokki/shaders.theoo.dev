@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @source "../views";
+
+@theme {
+    --spacing: 0.0625rem;
+}

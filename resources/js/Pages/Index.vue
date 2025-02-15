@@ -1,9 +1,9 @@
 <script setup>
-import BasicShader from "@/Shaders/BasicShader/BasicShader.vue";
+import DolorgPixelShader from "@/Shaders/DolorgPixelShader/DolorgPixelShader.vue";
 </script>
 
 <template>
     <main class="flex h-screen items-center justify-center">
-        <BasicShader/>
+        <DolorgPixelShader/>
     </main>
 </template>

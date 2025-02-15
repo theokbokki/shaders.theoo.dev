@@ -112,5 +112,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div ref="canvasRef" class="overflow-hidden rounded-xl w-max"></div>
+    <div ref="canvasRef"></div>
 </template>
