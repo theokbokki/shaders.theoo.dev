@@ -36,7 +36,7 @@ const updatePosition = () => {
         const containerWidth = el.offsetWidth;
 
         if (containerWidth) {
-            position.value.x = parentWidth - containerWidth;
+            position.value.x = parentWidth - containerWidth - 64;
         }
 
         position.value.y = el.offsetTop;
